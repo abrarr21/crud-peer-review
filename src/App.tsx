@@ -6,12 +6,12 @@ import type { FormData } from "./components/UserFrom";
 import { villains } from "./data/villain";
 
 function App() {
-    const [toggle, setToggle] = useState(true);
+    const [toggle, setToggle] = useState(false);
     const [villainData, setVillainData] = useState<FormData[]>(villains);
     const [editData, setEditData] = useState<FormData | null>(null);
 
     const handleRemove = (index: string) => {
-        let filtered = villainData.filter((elem) => elem.id !== index);
+        const filtered = villainData.filter((elem) => elem.id !== index);
         setVillainData(filtered);
     };
 
