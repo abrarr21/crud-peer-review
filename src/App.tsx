@@ -3,10 +3,11 @@ import Navbar from "./components/Navbar";
 import UserForm from "./components/UserFrom";
 import UserCard from "./components/UserCard";
 import type { FormData } from "./components/UserFrom";
+import { villains } from "./data/villain";
 
 function App() {
     const [toggle, setToggle] = useState(true);
-    const [villainData, setVillainData] = useState<FormData[]>([]);
+    const [villainData, setVillainData] = useState<FormData[]>(villains);
     const [editData, setEditData] = useState<FormData | null>(null);
 
     const handleRemove = (index: string) => {
