@@ -1,69 +1,63 @@
-# React + TypeScript + Vite
+# 🦹 Villains Club
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A CRUD web app for managing a collection of fictional villains — add, update, and remove your favourite movie and anime antagonists.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React + TypeScript** — component-based UI with full type safety
+- **React Hook Form** — form state management and validation
+- **nanoid** — unique ID generation for each villain entry
+- **Tailwind CSS** — utility-first styling.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Add** a villain with a name, movie/anime reference, and image URL
+- **Edit** existing villain entries via a pre-populated form
+- **Delete** villains from the collection
+- **Form validation** — required fields, minimum lengths, URL format checks, and whitespace guards
+- **Preloaded data** — ships with 5 iconic villains.
+- **Responsive card**
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── Navbar.tsx       # Top nav with Add/Show toggle button
+│   ├── UserCard.tsx     # Villain card with Update and Remove actions
+│   └── UserForm.tsx     # Add/Edit form with react-hook-form validation
+├── data/
+│   └── villain.ts       # Seed data for initial villains
+└── App.tsx              # Root component, state management
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Components
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Component      | Role                                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| `App.tsx`      | Owns all state (`villainData`, `editData`, `toggle`). Renders Navbar, form, or card grid conditionally. |
+| `Navbar.tsx`   | Displays the logo and a button that toggles between the form and card grid views.                       |
+| `UserForm.tsx` | Add/Edit form. Pre-fills with `editData` if editing, otherwise creates a new villain on submit.         |
+| `UserCard.tsx` | Displays a villain. **Update** loads it into the form; **Remove** deletes it from state.                |
+
+## State & Flow
+
+```
+App (state)
+ ├── toggle  →  false = card grid, true = form
+ ├── villainData[]  →  passed down to UserCard (read) and UserForm (write)
+ └── editData  →  null = add mode, FormData = edit mode
+
+User clicks "+ Add Villain"  →  toggle = true  →  UserForm renders (empty)
+User clicks "Update" on card  →  editData = card data, toggle = true  →  UserForm renders (pre-filled)
+User submits form  →  villainData updated, editData cleared, toggle = false
+User clicks "Remove"  →  villain filtered out of villainData
 ```
