@@ -7,9 +7,11 @@ import type { FormData } from "./components/UserFrom";
 function App() {
     const [toggle, setToggle] = useState(true);
     const [villainData, setVillainData] = useState<FormData[]>([]);
+    const [editData, setEditData] = useState<FormData | null>(null);
 
-    const handleRemove = (index: number) => {
-        setVillainData((prev) => prev.filter((_, i) => i !== index));
+    const handleRemove = (index: string) => {
+        let filtered = villainData.filter((elem) => elem.id !== index);
+        setVillainData(filtered);
     };
 
     return (
@@ -19,6 +21,8 @@ function App() {
                 <UserForm
                     setVillainData={setVillainData}
                     setToggle={setToggle}
+                    editData={editData}
+                    setEditData={setEditData}
                 />
             ) : villainData.length === 0 ? (
                 <p className="text-center text-[#6b7280] mt-20 text-lg">
@@ -26,11 +30,13 @@ function App() {
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-                    {villainData.map((elem, index) => (
+                    {villainData.map((elem) => (
                         <UserCard
-                            key={index}
+                            key={elem.id}
                             villainData={elem}
-                            onRemove={() => handleRemove(index)}
+                            onRemove={() => handleRemove(elem.id)}
+                            setToggle={setToggle}
+                            setEditData={setEditData}
                         />
                     ))}
                 </div>

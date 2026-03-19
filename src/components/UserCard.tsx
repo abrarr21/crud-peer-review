@@ -3,9 +3,16 @@ import type { FormData } from "./UserFrom";
 type CardProps = {
     villainData: FormData;
     onRemove: () => void;
+    setEditData: (data: FormData | null) => void;
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const UserCard = ({ villainData, onRemove }: CardProps) => {
+const UserCard = ({
+    villainData,
+    onRemove,
+    setToggle,
+    setEditData,
+}: CardProps) => {
     return (
         <div className="rounded-lg bg-[#1a1025] border border-[#e94560] overflow-hidden  mt-6">
             <img
@@ -21,7 +28,13 @@ const UserCard = ({ villainData, onRemove }: CardProps) => {
                     {villainData.reference}
                 </p>
                 <div className="flex gap-2">
-                    <button className="flex-1 py-2 rounded-lg text-sm font-semibold cursor-pointer bg-[#e94560] hover:bg-[#c73652] text-white transition">
+                    <button
+                        onClick={() => {
+                            setEditData(villainData);
+                            setToggle(true);
+                        }}
+                        className="flex-1 py-2 rounded-lg text-sm font-semibold cursor-pointer bg-[#e94560] hover:bg-[#c73652] text-white transition"
+                    >
                         Update
                     </button>
                     <button

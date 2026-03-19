@@ -1,6 +1,8 @@
+import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
 
 export type FormData = {
+    id: string;
     name: string;
     reference: string;
     imageUrl: string;
@@ -9,19 +11,37 @@ export type FormData = {
 type UserFormProps = {
     setVillainData: React.Dispatch<React.SetStateAction<FormData[]>>;
     setToggle: React.Dispatch<React.SetStateAction<boolean>>;
+    setEditData: React.Dispatch<React.SetStateAction<FormData | null>>;
+    editData: FormData | null;
 };
 
-function UserForm({ setVillainData, setToggle }: UserFormProps) {
+function UserForm({
+    setVillainData,
+    setToggle,
+    setEditData,
+    editData,
+}: UserFormProps) {
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors },
-    } = useForm<FormData>();
+        formState: { errors, isValid },
+    } = useForm<FormData>({
+        mode: "onChange",
+        defaultValues: editData ?? undefined,
+    });
 
     const handleSubmitForm = (data: FormData) => {
-        console.log(data);
-        setVillainData((prev) => [...prev, data]);
+        if (editData) {
+            setVillainData((prev) => {
+                return prev.map((val) => {
+                    return val.id === editData.id ? { ...val, ...data } : val;
+                });
+            });
+            setEditData(null);
+        } else {
+            setVillainData((prev) => [...prev, { ...data, id: nanoid() }]);
+        }
         reset();
         setToggle(false);
     };
@@ -107,8 +127,9 @@ function UserForm({ setVillainData, setToggle }: UserFormProps) {
                         )}
                     </div>
                     <button
+                        disabled={!isValid}
                         type="submit"
-                        className="w-full py-3 cursor-pointer rounded-lg text-md font-semibold transition bg-[#e94560] hover:bg-[#c73652] text-white"
+                        className={`w-full py-3 cursor-pointer rounded-lg text-md font-semibold transition ${!isValid ? "bg-gray-400" : "bg-[#e94560] hover:bg-[#c73652]"} text-white`}
                     >
                         Add Villain
                     </button>
